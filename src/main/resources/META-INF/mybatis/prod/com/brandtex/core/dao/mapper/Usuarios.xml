@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.brandtex.core.dao.UsuariosDao">
+
+	<resultMap id="resultUsuarios" type="com.brandtex.core.domain.Usuarios">
+		<id property="idUsuario" column="idUsuario" />
+		<result property="desUsuario" column="desUsuario" />
+		<result property="desLogin" column="desLogin" />
+		<result property="desClave" column="desClave" />
+		<result property="idPerfil" column="idPerfil" />
+	</resultMap>
+	
+	<select id="retrieve" parameterType="java.util.Map" resultMap="resultUsuarios">
+		SELECT idUsuario,		desUsuario,		idPerfil,		desLogin,		desClave
+		FROM usuarios
+	</select>
+
+	<select id="obtenerSeqUsuario" resultType="Integer">
+		SELECT NVL(MAX(TO_NUMBER(U.COD_UNIDMEDI)),0) + 1 AS next_id FROM TM_UNIDMEDI U
+	</select>
+
+	<insert id="insert" parameterType="com.brandtex.core.domain.Usuarios">
+	  	INSERT INTO TM_UNIDMEDI 
+	  		(	COD_UNIDMEDI, 
+	  			DES_NOMBUMEDI, 
+	  			COD_USUAREGI, 
+	  			FEC_REGI, 
+	  			DES_DIREIP  )
+	   		VALUES
+	   		(	#{codigo}, 
+	   			#{nombre}, 
+	   			#{usuarioReg}, 
+	   			#{fechaReg}, 
+	   			#{direccionIP} )
+	</insert>
+
+	<update id="update" parameterType="com.brandtex.core.domain.Usuarios">
+		UPDATE TM_UNIDMEDI
+		SET 
+		DES_NOMBUMEDI	 	= #{nombre},
+		COD_USUAMODI 	= #{usuarioMod},
+		FEC_MODI	 	= #{fechaMod},
+		DES_DIREIP	 	= #{direccionIP}
+		WHERE COD_UNIDMEDI = #{codigo}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		DELETE FROM TM_UNIDMEDI
+		WHERE COD_UNIDMEDI = #{codigo}
+	</delete>
+	
+	<select id="get" parameterType="String" resultMap="resultUsuarios">
+		SELECT 	COD_UNIDMEDI, 
+				DES_NOMBUMEDI, 
+				COD_USUAREGI, 
+				FEC_REGI, 
+				COD_USUAMODI, 
+				FEC_MODI, 
+				DES_DIREIP
+		FROM	TM_UNIDMEDI
+		WHERE	COD_UNIDMEDI = #{codigo}
+	</select>
+</mapper>
